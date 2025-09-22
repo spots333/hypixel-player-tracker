@@ -1,0 +1,24 @@
+# Hypixel Tracker Configuration Template
+# Copy this file to config.properties and fill in your actual values
+
+# Hypixel API Configuration
+# Get your API key from: https://developer.hypixel.net/
+hypixel.api.key=YOUR_HYPIXEL_API_KEY_HERE
+
+# Discord Bot Configuration
+# Create a bot at: https://discord.com/developers/applications
+discord.bot.token=YOUR_DISCORD_BOT_TOKEN_HERE
+
+# Player Tracking Configuration
+# File containing the list of players to track
+player.list.filename=tracked_players.txt
+
+# Set to true if the file contains usernames, false if it contains UUIDs
+player.list.contains.usernames=true
+
+# Bot Configuration
+# Check interval in minutes (minimum 5 to respect Hypixel API limits)
+check.interval.minutes=5
+
+# Maximum number of players to track (Hypixel API limit is 300 requests per 5 minutes)
+max.tracked.players=300
