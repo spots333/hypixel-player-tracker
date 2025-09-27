@@ -15,6 +15,12 @@ In the next message, using discord timestamps, you can tell that 'prava' stopped
 ## How it works
 The project relies on four dependencies: JDA for the Discord side, logback (a requirement of JDA), json and gson for the stats parsing side. It also has the ShadowJar application as an option, to let the developer build the project into a Jar file.
 
+### Simplified Diagram
+
+<img width="1280" height="720" alt="SpotsTrackerBotDiagram" src="https://github.com/user-attachments/assets/7a449d9c-3539-4084-8c17-e757d787cf98" />
+
+The Main Loop flow as seen in the diagram runs through every player in the tracked_players.txt list, and repeats every 5 minutes. The real code has Main.java connected to every other module, so I have omitted that for simplicity. JsonComparator, ParseDifferences and Differences all are part of the same pipeline of figuring out which stats changed between two versions of stats and making it readable, they have been split up for coding simplicity.
+
 The project is split up into several java files. I will explain the helper java files first. We have UsernameAndUUIDConverter, which has several public methods to convert an inputted uuid to a username and back through the Mojang API. Then we have MiscHelper.java, which has several helper methods, like listUsernamesToListUUIDs() which takes in an array of usernames and returns an array of matching uuids. listUUIDsToListUsernames() does the opposite. readPlayerUsernames() takes in a file name and returns an array of usernames from that file. This is used for getting our initial list of players to track. We also have generateSwCosmetics() which is a helper method for listing out all the Skywars player cosmetics a player has, and returns them as a built string.
 
 GetStats.java is a class whose job it is just to take in a tracked player's uuid and a Hypixel API key, and return the JsonObject API response.
@@ -31,7 +37,11 @@ After doing that, we go onto the next player in our list. Then once all the play
 
 
 
-
+## Upgrades:
+(This project was originally created as a proof-of-concept tracker, so I was not really thinking about its architecture much, just figuring it out as I went) 
+- Instead of storing player stats data in a text file in a folder, a database should be implemented.
+- More should be containerized, especially the Discord API calls from Main. They should all be moved to DiscordManager.
+- For stats comparisons, maps should be used instead of arrays.
 
 
 ## Notes:
@@ -43,9 +53,16 @@ After doing that, we go onto the next player in our list. Then once all the play
 - Player cosmetics are only useful to look at if a player has a rank that allows them to nick. The only rank that allows that is the MVP++ rank. Therefore the bot only outputs a player's Skywars cosmetics if they have that rank.
 - The current stats are always saved to a txt file with their uuid. This allows the player tracker to function fine even after it is turned off or restarted.
 
-## Setup Instructions:
+## Build Instructions:
  - This project uses Java 17
- - To run it, you can either execute the Main file, or build it as a shadowJar and run it through command line.
- - For this project to function, you must get a Hypixel API key, from here: (https://developer.hypixel.net/). This requires a Hypixel Forums account and a Minecraft account.
- - For this project to function, you must get a Discord Bot Developer token, from here: (https://discord.com/developers/applications). This requires a Discord Account. After doing so, you must invite the bot either to an existing Discord Server or a new one, and give it Admin permissions.
- - For any results, you must be tracking at least one player. This can be done through putting their username in the tracked_player.txt file, or however you named it. For multiple players, just put every new player username on a new line in that file.
+ - Executing Main.java in an IDE is enough for this to run.
+ - Build it as a shadowJar to get a runnable jar file.
+
+## Run Instructions
+ - For this project to function, you must set a Hypixel API key, from here: (https://developer.hypixel.net/). This requires a Hypixel Forums account and a Minecraft account.
+ - For this project to function, you must set a Discord Bot Developer token, from here: (https://discord.com/developers/applications). This requires a Discord Account. After doing so, you must invite the bot either to an existing Discord Server or a new one, and give it Admin permissions.
+ - For any results, you must be tracking at least one player. This can be done through putting their username in the tracked_players.txt file, or however you named it. For multiple players, just put every new player username on a new line in that file.
+ - Before running, make sure you have the following files: The jar file, the filled out config.properties file and the tracked_players.txt file.
+ - To run it, you can either execute the Main file, or build it as a shadowJar and run it through command line (open the command prompt to the directory of where the jar file resides and run something like this: "java -jar spotsTrackerBot-1.0-SNAPSHOT-all.jar")
+ - Make sure all files are in the same directory.
+ 

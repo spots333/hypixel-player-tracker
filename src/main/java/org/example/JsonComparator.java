@@ -176,6 +176,7 @@ public class JsonComparator {
      */
     public List<String> compare(JsonObject newJson, String playerUUID) {
         ensureDirectoryExists();
+
         String oldJsonFileName = "player_jsons\\" + playerUUID + "_jsondata.txt";
         List<String> diff = compareAndReturnDifferences(newJson, oldJsonFileName);
         updateOldJson(oldJsonFileName, newJson);
@@ -198,4 +199,5 @@ public class JsonComparator {
             }
         }
     }
+
 }
