@@ -175,9 +175,29 @@ public class JsonComparator {
      * @return List of strings describing detected differences in player statistics
      */
     public List<String> compare(JsonObject newJson, String playerUUID) {
+        ensureDirectoryExists();
+
         String oldJsonFileName = "player_jsons\\" + playerUUID + "_jsondata.txt";
         List<String> diff = compareAndReturnDifferences(newJson, oldJsonFileName);
         updateOldJson(oldJsonFileName, newJson);
         return diff;
     }
+
+    /**
+     * Ensures the player_jsons directory exists, creating it if necessary.
+     * This method should be called before any file operations to prevent
+     * FileNotFoundException when the directory doesn't exist.
+     */
+    private void ensureDirectoryExists() {
+        File directory = new File("player_jsons");
+        if (!directory.exists()) {
+            boolean created = directory.mkdirs();
+            if (created) {
+                System.out.println("Created player_jsons directory");
+            } else {
+                System.err.println("Failed to create player_jsons directory");
+            }
+        }
+    }
+
 }

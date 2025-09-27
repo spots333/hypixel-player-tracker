@@ -186,37 +186,38 @@ public class MiscHelper {
      * @return formatted string of active cosmetics, empty string if no cosmetics found
      */
     public static String generateSwCosmetics(JsonObject playerStats) {
-        String build = "";
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_cage")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_cage").getAsString();
-            build += cosmetic + " ";
+        //gets player.stats.SkyWars.active_cage, player.stats.SkyWars.active_balloon, etc and
+        //appends them all into one string. The output isn't pretty, and can be improved by
+        //processing all the cosmetics by their unique names, but there are ~300 of them.
+        JsonObject player = playerStats.getAsJsonObject("player");
+        if (player == null) {
+            return "";
         }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_balloon")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_balloon").getAsString();
-            build += cosmetic + " ";
+        JsonObject stats = player.getAsJsonObject("stats");
+        if (stats == null) {
+            return "";
         }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_projectiletrail")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_projectiletrail").getAsString();
-            build += cosmetic + " ";
-        }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_killeffect")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_killeffect").getAsString();
-            build += cosmetic + " ";
-        }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_killmessages")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_killmessages").getAsString();
-            build += cosmetic + " ";
-        }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_victorydance")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_victorydance").getAsString();
-            build += cosmetic + " ";
-        }
-        if (playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").has("active_deathcry")) {
-            String cosmetic = playerStats.getAsJsonObject("player").getAsJsonObject("stats").getAsJsonObject("SkyWars").get("active_deathcry").getAsString();
-            build += cosmetic + " ";
+        JsonObject skyWars = stats.getAsJsonObject("SkyWars");
+        if (skyWars == null) {
+            return "";
         }
 
-        // If the "rank" field is not present, return false
-        return build;
+        String[] cosmeticFields = {
+                "active_cage",
+                "active_balloon",
+                "active_projectiletrail",
+                "active_killeffect",
+                "active_killmessages",
+                "active_victorydance",
+                "active_deathcry"
+        };
+
+        StringBuilder sb = new StringBuilder();
+        for (String field : cosmeticFields) {
+            if (skyWars.has(field)) {
+                sb.append(skyWars.get(field).getAsString()).append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 }
